@@ -1,9 +1,9 @@
+import { SurrealDBAdapter } from '@/app/api/auth/Auth-Adapter/surrealdb';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
-import { SurrealDBAdapter } from '@/database/Auth-Adapter/surrealdb';
-import { getSurrealClient } from '../../../database/surrealdb';
+import GoogleProvider from 'next-auth/providers/google';
+import { getSurrealClient } from '../../../lib/surrealdb';
 
 export default async function auth(req: any, res: any) {
   if (req.query.nextauth.includes('callback') && req.method === 'POST') {

@@ -1,14 +1,11 @@
 /** @return { import("next-auth/adapters").Adapter } */
-import type Surreal from 'surrealdb.js';
-import type { Result } from 'surrealdb.js';
 import type {
-  Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
+  Adapter, AdapterAccount,
+  AdapterSession, AdapterUser, VerificationToken
 } from 'next-auth/adapters';
 import type { ProviderType } from 'next-auth/providers';
+import type Surreal from 'surrealdb.js';
+import type { Result } from 'surrealdb.js';
 
 type Document = Record<string, string | null | undefined> & { id: string };
 export type UserDoc = Document & { email: string };
@@ -101,8 +98,9 @@ export function SurrealDBAdapter(
       try {
         const users = (await surreal.select(`user:${id}`)) as UserDoc[];
         return docToUser(users[0]);
-      } catch (e) {}
-      return null;
+      } catch (e) {
+        return null;
+      }
     },
     async getUserByEmail(email: string) {
       const surreal = await client;
@@ -113,7 +111,9 @@ export function SurrealDBAdapter(
         );
         const user = users[0].result?.[0];
         if (user) return docToUser(user);
-      } catch (e) {}
+      } catch (e) {
+        return null;
+      }
       return null;
     },
     async getUserByAccount({ providerAccountId, provider }) {
@@ -125,7 +125,9 @@ export function SurrealDBAdapter(
         );
         const user = users[0].result?.[0]?.userId;
         if (user) return docToUser(user);
-      } catch (e) {}
+      } catch (e) {
+        return null;
+      }
       return null;
     },
     async updateUser(user) {
@@ -154,7 +156,9 @@ export function SurrealDBAdapter(
           const accountId = extractId(account.id);
           await surreal.delete(`account:${accountId}`);
         }
-      } catch (e) {}
+      } catch (e) {
+        // pass
+      }
 
       // delete session
       try {
@@ -167,7 +171,9 @@ export function SurrealDBAdapter(
           const sessionId = extractId(session.id);
           await surreal.delete(`session:${sessionId}`);
         }
-      } catch (e) {}
+      } catch (e) {
+        //pass
+      }
 
       // delete user
       await surreal.delete(`user:${userId}`);
@@ -192,7 +198,9 @@ export function SurrealDBAdapter(
           const accountId = extractId(account.id);
           await surreal.delete(`account:${accountId}`);
         }
-      } catch (e) {}
+      } catch (e) {
+        //pass
+      }
     },
     async createSession({ sessionToken, userId, expires }) {
       const surreal = await client;
@@ -254,7 +262,9 @@ export function SurrealDBAdapter(
           }
           return docToSession(updatedSession as SessionDoc);
         }
-      } catch (e) {}
+      } catch (e) {
+        return null;
+      }
       return null;
     },
     async deleteSession(sessionToken: string) {
@@ -269,7 +279,9 @@ export function SurrealDBAdapter(
           const sessionId = extractId(session.id);
           await surreal.delete(`session:${sessionId}`);
         }
-      } catch (e) {}
+      } catch (e) {
+        //pass
+      }
     },
     async createVerificationToken({ identifier, expires, token }) {
       const surreal = await client;
