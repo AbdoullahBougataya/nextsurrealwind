@@ -68,13 +68,13 @@ export default async function auth(req: any, res: any) {
   return await NextAuth(req, res, {
     providers,
     adapter: SurrealDBAdapter(getSurrealClient()),
-    pages: {
-      signIn: '/auth/signin/page',
-      signOut: '/auth/signout/page',
-      error: '/auth/error/page', // Error code passed in query string as ?error=
-      verifyRequest: '/auth/verify-request/page', // (used for check email message)
-      newUser: '/auth/new-user/page', // New users will be directed here on first sign in (leave the property out if not of interest)
-    },
+    // pages: {
+    //   signIn: '/auth/signin/page',
+    //   signOut: '/auth/signout/page',
+    //   error: '/auth/error/page', // Error code passed in query string as ?error=
+    //   verifyRequest: '/auth/verify-request/page', // (used for check email message)
+    //   newUser: '/auth/new-user/page', // New users will be directed here on first sign in (leave the property out if not of interest)
+    // },
     callbacks: {
       session({ session, token }) {
         // Return a cookie value as part of the session
